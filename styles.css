@@ -29,3 +29,186 @@ a[href="https://ko-fi.com/phibr0"]
   padding-left: 0;
   margin-left: 2em;
 }
+
+/* Add Emoji Modal */
+.ES-add-emoji-modal {
+  padding: 20px;
+}
+
+.ES-add-emoji-modal h2 {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.ES-add-emoji-modal h4 {
+  margin-top: 20px;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.ES-modal-info {
+  color: var(--text-muted);
+  font-size: 0.9em;
+  margin-bottom: 16px;
+}
+
+.ES-drop-zone {
+  border: 2px dashed var(--background-modifier-border);
+  border-radius: 8px;
+  padding: 40px 20px;
+  text-align: center;
+  transition: all 0.2s ease;
+  white-space: pre;
+  cursor: pointer;
+  background: var(--background-secondary);
+}
+
+.ES-drop-zone:hover {
+  border-color: var(--interactive-accent);
+  background: var(--background-secondary-alt);
+}
+
+.ES-drop-zone.ES-drag-over {
+  border-color: var(--interactive-accent);
+  background: var(--background-modifier-hover);
+}
+
+.ES-drop-zone.ES-has-image {
+  padding: 20px;
+}
+
+.ES-drop-zone-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.ES-emoji-preview {
+  max-width: 128px;
+  max-height: 128px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.ES-emoji-preview.ES-hidden {
+  display: none;
+}
+
+.ES-drop-text {
+  color: var(--text-muted);
+}
+
+.ES-upload-btn {
+  background: var(--interactive-normal);
+  border: 1px solid var(--background-modifier-border);
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--text-normal);
+}
+
+.ES-upload-btn:hover {
+  background: var(--interactive-hover);
+}
+
+.ES-shortcode-desc {
+  color: var(--text-muted);
+  font-size: 0.9em;
+  margin-bottom: 8px;
+}
+
+.ES-shortcode-container {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  padding: 8px 12px;
+}
+
+.ES-shortcode-prefix,
+.ES-shortcode-suffix {
+  color: var(--text-muted);
+  font-family: var(--font-monospace);
+}
+
+.ES-shortcode-input {
+  border: none;
+  background: transparent;
+  flex: 1;
+  font-family: var(--font-monospace);
+  color: var(--text-normal);
+  outline: none;
+}
+
+.ES-modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+/* Inline Custom Emoji */
+.ES-inline-emoji {
+  height: 1.4em;
+  vertical-align: middle;
+  display: inline;
+}
+
+/* Suggester Custom Emoji */
+.ES-custom-emoji-img {
+  height: 1.5em;
+  width: 1.5em;
+  object-fit: contain;
+}
+
+/* Settings Custom Emoji List */
+.ES-custom-emoji-list {
+  margin-top: 16px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.ES-custom-emoji-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.ES-custom-emoji-item:last-child {
+  border-bottom: none;
+}
+
+.ES-custom-emoji-preview {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.ES-custom-emoji-shortcode {
+  flex: 1;
+  font-family: var(--font-monospace);
+  color: var(--text-muted);
+}
+
+.ES-custom-emoji-delete {
+  background: transparent;
+  border: 1px solid var(--background-modifier-border);
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 0.85em;
+}
+
+.ES-custom-emoji-delete:hover {
+  background: var(--background-modifier-error);
+  color: var(--text-on-accent);
+  border-color: var(--background-modifier-error);
+}
+

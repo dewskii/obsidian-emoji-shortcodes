@@ -19,7 +19,7 @@ export default class DefinitionListPostProcessor {
                         defs: [],
                     });
                 } else if (idx !== lines.length - 1) {
-                    dlists[i].defs.push(line.substring(2));
+                    dlists[i]?.defs.push(line.substring(2));
                 }
             });
         });

@@ -1,5 +1,7 @@
 import { PluginSettingTab, App, Setting } from "obsidian";
 import EmojiShortcodesPlugin from "./main";
+import { CustomEmoji } from "./types";
+import { AddEmojiModal } from "./ui/add-emoji-modal";
 
 export interface EmojiPluginSettings {
 	immediateReplace: boolean;
@@ -7,6 +9,7 @@ export interface EmojiPluginSettings {
 	historyPriority: boolean;
 	historyLimit: number;
 	history: string[];
+	customEmojis: CustomEmoji[];
 }
 
 export const DEFAULT_SETTINGS: EmojiPluginSettings = {
@@ -15,6 +18,7 @@ export const DEFAULT_SETTINGS: EmojiPluginSettings = {
 	historyPriority: true,
 	historyLimit: 100,
 	history: [],
+	customEmojis: [],
 }
 
 export class EmojiPluginSettingTab extends PluginSettingTab {
@@ -97,5 +101,39 @@ export class EmojiPluginSettingTab extends PluginSettingTab {
 			.addButton((bt) => {
 				bt.buttonEl.outerHTML = `<a href="https://ko-fi.com/phibr0"><img src="https://uploads-ssl.webflow.com/5c14e387dab576fe667689cf/61e11e22d8ff4a5b4a1b3346_Supportbutton-1.png"></a>`;
 			});
+
+		containerEl.createEl('h3', { text: 'Custom Emojis' });
+
+		new Setting(containerEl)
+			.setName('Add Custom Emoji')
+			.setDesc('Upload custom emoji images to use with shortcodes')
+			.addButton(cb => {
+				cb.setButtonText('Add Emoji')
+					.setCta()
+					.onClick(() => {
+						new AddEmojiModal(this.app, this.plugin, () => this.display()).open();
+					});
+			});
+
+		if (this.plugin.settings.customEmojis.length > 0) {
+			const emojiListContainer = containerEl.createDiv({ cls: 'ES-custom-emoji-list' });
+			
+			for (const customEmoji of this.plugin.settings.customEmojis) {
+				const emojiItem = emojiListContainer.createDiv({ cls: 'ES-custom-emoji-item' });
+				
+				emojiItem.createEl('img', {
+					cls: 'ES-custom-emoji-preview',
+					attr: { src: this.plugin.getCustomEmojiPath(customEmoji.filename) }
+				});
+				
+				emojiItem.createSpan({ text: `:${customEmoji.shortcode}:`, cls: 'ES-custom-emoji-shortcode' });
+				
+				const deleteBtn = emojiItem.createEl('button', { text: 'Delete', cls: 'ES-custom-emoji-delete' });
+				deleteBtn.addEventListener('click', async () => {
+					await this.plugin.deleteCustomEmoji(customEmoji.shortcode);
+					this.display();
+				});
+			}
+		}
 	}
 }
