@@ -13,3 +13,6 @@ main.js
 
 # obsidian
 data.json
+
+# local 
+.env

@@ -27,7 +27,7 @@ export default class EmojiShortcodesPlugin extends Plugin {
 
 		this.registerEditorExtension(createCustomEmojiViewPlugin(this));
 
-		this.addRibbonIcon('smile-plus', 'Add Custom Emoji', () => {
+		this.addRibbonIcon('smile-plus', 'Add custom emoji', () => {
 			new AddEmojiModal(this.app, this, () => {}).open();
 		});
 
@@ -48,7 +48,7 @@ export default class EmojiShortcodesPlugin extends Plugin {
 	}
 
 	async loadSettings() {
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData() as Partial<EmojiPluginSettings>);
 		this.updateEmojiList()
 	}
 
@@ -58,7 +58,7 @@ export default class EmojiShortcodesPlugin extends Plugin {
 	}
 
 	updateEmojiList() {
-		const historySet = new Set(this.settings.history);
+		const historySet = new Set<string>(this.settings.history);
 		const builtInEmojis = Object.keys(emoji).filter(e => !historySet.has(e));
 		const customEmojiKeys = this.settings.customEmojis.map(e => `:${e.shortcode}:`);
 		this.emojiList = [...customEmojiKeys, ...this.settings.history, ...builtInEmojis];
@@ -103,7 +103,7 @@ export default class EmojiShortcodesPlugin extends Plugin {
 		
 		try {
 			await this.app.vault.adapter.remove(filePath);
-		} catch (e) {
+		} catch {
 			// already deleted
 		}
 		
@@ -120,7 +120,7 @@ export default class EmojiShortcodesPlugin extends Plugin {
 		const history = [...set].slice(0, this.settings.historyLimit);
 
 		this.settings = Object.assign(this.settings, { history });
-		this.saveSettings();
+		void this.saveSettings();
 	}
 }
 
@@ -173,24 +173,17 @@ class EmojiSuggester extends EditorSuggest<string> {
 				});
 			}
 		} else {
-			const emojiChar = (emoji as Record<string, string>)[suggestion];
-			outer.createDiv({ cls: "ES-emoji" }).setText(emojiChar as string);
+			const emojiChar = emoji[suggestion] as string;
+			outer.createDiv({ cls: "ES-emoji" }).setText(emojiChar);
 		}
 	}
 
 	selectSuggestion(suggestion: string): void {
 		if(this.context) {
-			let replacement: string;
+			// Always keep shortcode - view plugin handles rendering with tooltips
+			const replacement = `${suggestion} `;
 			
-			if (this.plugin.isCustomEmoji(suggestion)) {
-				replacement = `${suggestion} `; // live view takes care of render
-			} else if (this.plugin.settings.immediateReplace) {
-				replacement = emoji[suggestion];
-			} else {
-				replacement = `${suggestion} `;
-			}
-			
-			(this.context.editor as Editor).replaceRange(replacement, this.context.start, this.context.end);
+			(this.context.editor).replaceRange(replacement, this.context.start, this.context.end);
 			this.plugin.updateHistory(suggestion);
 		}
 	}

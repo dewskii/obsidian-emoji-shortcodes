@@ -3,9 +3,18 @@
   "version": "0.12.0",
   "description": "This is a sample plugin for Obsidian (https://obsidian.md)",
   "main": "main.js",
+  "type": "module",
   "scripts": {
-    "dev": "esbuild src/main.ts --bundle --external:obsidian --format=cjs --outfile=main.js --minify --watch",
-    "build": "rollup --config rollup.config.js --environment BUILD:production"
+    "dev": "bun run esbuild.config.mjs",
+    "lint": "bun run eslint src/",
+    "lint:fix": "bun run eslint --fix src/",
+    "format": "biome format --write src/",
+    "build": "bun run esbuild.config.mjs production",
+    "stage:local:prep": "dotenv -- mkdir -p \"$DEPLOY_DIR\"",
+    "stage:local": "dotenv -- cp main.js manifest.json styles.css \"$DEPLOY_DIR\"",
+    "deploy:local": "dotenv -- sh -c 'bun run --sequential stage:local:prep stage:local'",
+    "deploy": "dotenv -- bun run --sequential lint:fix build deploy:local",
+    "release": "rm -f emoji-shortcodes.zip && bun run build && mkdir -p emoji-shortcodes && cp main.js manifest.json styles.css emoji-shortcodes && zip emoji-shortcodes.zip emoji-shortcodes"
   },
   "keywords": [],
   "author": "",
@@ -19,8 +28,13 @@
     "@rollup/plugin-typescript": "^8.2.1",
     "@types/node": "^14.14.37",
     "obsidian": "^1.12.3",
-    "rollup": "^2.32.1",
     "tslib": "^2.2.0",
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "dotenv-cli": "^11.0.0",
+    "esbuild": "^0.27.4",
+    "eslint": "^10.1.0",
+    "eslint-plugin-obsidianmd": "^0.1.9"
   }
 }

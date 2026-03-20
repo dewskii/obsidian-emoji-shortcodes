@@ -212,3 +212,73 @@ a[href="https://ko-fi.com/phibr0"]
   border-color: var(--background-modifier-error);
 }
 
+/* Emoji Hover Tooltip */
+.ES-emoji-wrapper {
+  position: relative;
+  display: inline;
+}
+
+.ES-emoji-tooltip {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.ES-emoji-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--background-modifier-border);
+}
+
+.ES-emoji-tooltip::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--background-primary);
+  z-index: 1;
+}
+
+.ES-emoji-wrapper:hover .ES-emoji-tooltip {
+  display: flex;
+}
+
+.ES-tooltip-emoji {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.ES-tooltip-unicode {
+  font-size: 48px;
+  line-height: 1;
+}
+
+.ES-unicode-emoji {
+  /* Inline unicode emoji, no special styling needed */
+}
+
+.ES-tooltip-text {
+  font-family: var(--font-monospace);
+  font-size: 0.85em;
+  color: var(--text-muted);
+}

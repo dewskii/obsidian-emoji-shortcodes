@@ -25,10 +25,16 @@ export default class DefinitionListPostProcessor {
         });
         if(dlists.length !== 0) {
             el.empty();
-            let dl =  new HTMLDListElement();
+            const dl = document.createElement('dl');
             dlists.forEach(dlist => {
-                dl.appendChild(createEl('dt', {text: dlist.title}));
-                dlist.defs.forEach(def => dl.appendChild(createEl('dd', {text: def})));
+                const dt = document.createElement('dt');
+                dt.textContent = dlist.title;
+                dl.appendChild(dt);
+                dlist.defs.forEach(def => {
+                    const dd = document.createElement('dd');
+                    dd.textContent = def;
+                    dl.appendChild(dd);
+                });
             });
             el.appendChild(dl);
         }

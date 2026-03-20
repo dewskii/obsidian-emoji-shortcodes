@@ -13,37 +13,30 @@ export default class EmojiMarkdownPostProcessor {
 				const customEmoji = plugin.getCustomEmoji(shortcode);
 				if (customEmoji) {
 					const imgSrc = plugin.getCustomEmojiPath(customEmoji.filename);
-					const imgTag = `<img src="${imgSrc}" alt="${shortcode}" class="ES-inline-emoji">`;
-					EmojiMarkdownPostProcessor.customEmojiReplace(shortcode, el, imgTag);
+					const imgTag = `<span class="ES-emoji-wrapper"><img src="${imgSrc}" alt="${shortcode}" class="ES-inline-emoji"><span class="ES-emoji-tooltip"><img src="${imgSrc}" class="ES-tooltip-emoji"><span class="ES-tooltip-text">${shortcode}</span></span></span>`;
+					EmojiMarkdownPostProcessor.htmlReplace(shortcode, el, imgTag);
 				}
 			} else {
-				const replacement = emoji[shortcode as keyof typeof emoji] ?? shortcode;
-				EmojiMarkdownPostProcessor.emojiReplace(shortcode, el, replacement);
+				const emojiChar = emoji[shortcode] ?? shortcode;
+				const wrappedEmoji = `<span class="ES-emoji-wrapper"><span class="ES-unicode-emoji">${emojiChar}</span><span class="ES-emoji-tooltip"><span class="ES-tooltip-unicode">${emojiChar}</span><span class="ES-tooltip-text">${shortcode}</span></span></span>`;
+				EmojiMarkdownPostProcessor.htmlReplace(shortcode, el, wrappedEmoji);
 			}
 		});
 	}
 
-	static emojiReplace(shortcode: string, el: HTMLElement, replacement: string) {
+	static htmlReplace(shortcode: string, el: HTMLElement, replacement: string) {
 		if ((typeof el.tagName === "string") && (el.tagName.indexOf("CODE") !== -1 || el.tagName.indexOf("MJX") !== -1)) {
 			return;
 		}
 		if (el.hasChildNodes()) {
-			el.childNodes.forEach((child: ChildNode) => this.emojiReplace(shortcode, child as HTMLElement, replacement));
-		} else if (el.textContent) {
-			el.textContent = el.textContent.replace(shortcode, replacement);
-		}
-	}
-
-	static customEmojiReplace(shortcode: string, el: HTMLElement, imgTag: string) {
-		if ((typeof el.tagName === "string") && (el.tagName.indexOf("CODE") !== -1 || el.tagName.indexOf("MJX") !== -1)) {
-			return;
-		}
-		if (el.hasChildNodes()) {
-			Array.from(el.childNodes).forEach((child: ChildNode) => this.customEmojiReplace(shortcode, child as HTMLElement, imgTag));
+			Array.from(el.childNodes).forEach((child: ChildNode) => this.htmlReplace(shortcode, child as HTMLElement, replacement));
 		} else if (el.textContent && el.textContent.includes(shortcode)) {
 			const parent = el.parentNode as HTMLElement;
-			if (parent && parent.innerHTML) {
-				parent.innerHTML = parent.innerHTML.split(shortcode).join(imgTag);
+			if (parent) {
+				const template = document.createElement('template');
+				// eslint-disable-next-line @microsoft/sdl/no-inner-html
+				template.innerHTML = parent.innerHTML.split(shortcode).join(replacement);
+				parent.replaceChildren(...Array.from(template.content.childNodes));
 			}
 		}
 	}

@@ -34,11 +34,11 @@ export class EmojiPluginSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
-		containerEl.createEl('h2', { text: 'Emoji Shortcodes Plugin' });
+		;
 
 		new Setting(containerEl)
-			.setName('Immediate Emoji Replace')
-			.setDesc('If this is turned on, Emoji shortcodes will be immediately replaced after typing. Otherwise they are still stored as a shortcode and you only see the Emoji in Preview Mode.')
+			.setName('Immediate emoji replace')
+			.setDesc('If this is turned on, emoji shortcodes will be immediately replaced after typing. Otherwise they are still stored as a shortcode and you only see the emoji in preview mode.')
 			.addToggle(cb => {
 				cb.setValue(this.plugin.settings.immediateReplace)
 					.onChange(async value => {
@@ -48,8 +48,8 @@ export class EmojiPluginSettingTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
-			.setName('Emoji Suggester')
-			.setDesc('If this is turned on, a Suggester will appear everytime you type : followed by a letter. This will help you insert Emojis. (Doesn\'t work on mobile)')
+			.setName('Emoji suggester')
+			.setDesc('If this is turned on, a suggester will appear everytime you type : followed by a letter. This will help you insert emojis (doesn\'t work on mobile).')
 			.addToggle(cb => {
 				cb.setValue(this.plugin.settings.suggester)
 					.onChange(async value => {
@@ -59,7 +59,7 @@ export class EmojiPluginSettingTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
-			.setName('Use History Priority')
+			.setName('Use history priority')
 			.setDesc('Suggester gives priority to recently used emoji.')
 			.addToggle(cb => {
 				cb.setValue(this.plugin.settings.historyPriority)
@@ -72,7 +72,7 @@ export class EmojiPluginSettingTab extends PluginSettingTab {
 
 		if (this.plugin.settings.historyPriority) {
 			new Setting(containerEl)
-				.setName('History Limit')
+				.setName('History limit')
 				.setClass('ES-sub-setting')
 				.addText(cb => {
 					cb.setPlaceholder(String(DEFAULT_SETTINGS.historyLimit))
@@ -84,7 +84,7 @@ export class EmojiPluginSettingTab extends PluginSettingTab {
 				});
 
 			new Setting(containerEl)
-				.setName('Clear History')
+				.setName('Clear history')
 				.setClass('ES-sub-setting')
 				.addButton(cb => {
 					cb.setButtonText("Clear")
@@ -95,20 +95,13 @@ export class EmojiPluginSettingTab extends PluginSettingTab {
 				});
 		}
 
-		new Setting(containerEl)
-			.setName('Donate')
-			.setDesc('If you like this Plugin, consider donating to support continued development:')
-			.addButton((bt) => {
-				bt.buttonEl.outerHTML = `<a href="https://ko-fi.com/phibr0"><img src="https://uploads-ssl.webflow.com/5c14e387dab576fe667689cf/61e11e22d8ff4a5b4a1b3346_Supportbutton-1.png"></a>`;
-			});
-
-		containerEl.createEl('h3', { text: 'Custom Emojis' });
+		new Setting(containerEl).setName('Custom emojis').setHeading();
 
 		new Setting(containerEl)
-			.setName('Add Custom Emoji')
-			.setDesc('Upload custom emoji images to use with shortcodes')
+			.setName('Add custom emoji')
+			.setDesc('Upload custom emoji images to use with shortcodes.')
 			.addButton(cb => {
-				cb.setButtonText('Add Emoji')
+				cb.setButtonText('Add emoji')
 					.setCta()
 					.onClick(() => {
 						new AddEmojiModal(this.app, this.plugin, () => this.display()).open();
@@ -129,9 +122,8 @@ export class EmojiPluginSettingTab extends PluginSettingTab {
 				emojiItem.createSpan({ text: `:${customEmoji.shortcode}:`, cls: 'ES-custom-emoji-shortcode' });
 				
 				const deleteBtn = emojiItem.createEl('button', { text: 'Delete', cls: 'ES-custom-emoji-delete' });
-				deleteBtn.addEventListener('click', async () => {
-					await this.plugin.deleteCustomEmoji(customEmoji.shortcode);
-					this.display();
+				deleteBtn.addEventListener('click', () => {
+					void this.plugin.deleteCustomEmoji(customEmoji.shortcode).then(() => this.display());
 				});
 			}
 		}

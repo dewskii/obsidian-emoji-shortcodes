@@ -44,7 +44,7 @@ export class AddEmojiModal extends Modal {
 		const dropText = dropContent.createDiv({ cls: 'ES-drop-text' });
 		dropText.createSpan({ text: 'Drag and drop or\n\n' });
 		
-		const uploadBtn = dropText.createEl('button', { text: 'Upload Image', cls: 'ES-upload-btn' });
+		const uploadBtn = dropText.createEl('button', { text: 'Add image', cls: 'ES-upload-btn' });
 		uploadBtn.addEventListener('click', () => this.openFilePicker());
 
 		this.setupDragAndDrop();
@@ -60,6 +60,7 @@ export class AddEmojiModal extends Modal {
 		this.shortcodeInput = shortcodeContainer.createEl('input', {
 			type: 'text',
 			cls: 'ES-shortcode-input',
+			// eslint-disable-next-line obsidianmd/ui/sentence-case
 			attr: { placeholder: 'custom_emoji' }
 		});
 		shortcodeContainer.createSpan({ text: ':', cls: 'ES-shortcode-suffix' });
@@ -70,7 +71,7 @@ export class AddEmojiModal extends Modal {
 		cancelBtn.addEventListener('click', () => this.close());
 		
 		const saveBtn = buttonContainer.createEl('button', { text: 'Save', cls: 'mod-cta' });
-		saveBtn.addEventListener('click', () => this.saveEmoji());
+		saveBtn.addEventListener('click', () => void this.saveEmoji());
 	}
 
 	private setupDragAndDrop() {
@@ -114,6 +115,7 @@ export class AddEmojiModal extends Modal {
 
 	private handleFile(file: File) {
 		if (SUPPORTED_IMAGE_TYPES.indexOf(file.type) === -1) {
+			// eslint-disable-next-line obsidianmd/ui/sentence-case
 			new Notice('Please select a valid image file (PNG, GIF, JPG, or WEBP)');
 			return;
 		}
@@ -156,7 +158,7 @@ export class AddEmojiModal extends Modal {
 		}
 
 		// Check built-in emojis
-		if (emoji[`:${shortcode}:`]) {
+		if (`:${shortcode}:` in emoji) {
 			new Notice(`Shortcode ":${shortcode}:" conflicts with a built-in emoji`);
 			return;
 		}
@@ -167,7 +169,7 @@ export class AddEmojiModal extends Modal {
 			this.onSave();
 			this.close();
 		} catch (error) {
-			new Notice(`Failed to save emoji: ${error}`);
+			new Notice(`Failed to save emoji: ${error instanceof Error ? error.message : String(error)}`);
 		}
 	}
 
