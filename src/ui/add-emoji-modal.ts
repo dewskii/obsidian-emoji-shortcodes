@@ -60,8 +60,7 @@ export class AddEmojiModal extends Modal {
 		this.shortcodeInput = shortcodeContainer.createEl('input', {
 			type: 'text',
 			cls: 'ES-shortcode-input',
-			// eslint-disable-next-line obsidianmd/ui/sentence-case
-			attr: { placeholder: 'custom_emoji' }
+						attr: { placeholder: 'custom_emoji' }
 		});
 		shortcodeContainer.createSpan({ text: ':', cls: 'ES-shortcode-suffix' });
 
@@ -115,8 +114,7 @@ export class AddEmojiModal extends Modal {
 
 	private handleFile(file: File) {
 		if (SUPPORTED_IMAGE_TYPES.indexOf(file.type) === -1) {
-			// eslint-disable-next-line obsidianmd/ui/sentence-case
-			new Notice('Please select a valid image file (PNG, GIF, JPG, or WEBP)');
+						new Notice('Please select a valid image file (PNG, GIF, JPG, or WEBP)');
 			return;
 		}
 

@@ -7,7 +7,7 @@ export function checkForInputBlock(editor: Editor, line: number, ch: number): bo
 	const beforeCursor = lineText.substring(0, ch);
 	const backtickCount = (beforeCursor.match(/`/g) || []).length;
 	if (backtickCount % 2 === 1) {
-		return false; // Inside inline code
+		return false;
 	}
 
 	let insideFence = false;

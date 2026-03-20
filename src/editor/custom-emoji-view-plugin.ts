@@ -3,77 +3,19 @@ import { Decoration, DecorationSet, EditorView, WidgetType, ViewPlugin, ViewUpda
 import type EmojiShortcodesPlugin from '../main';
 import { checkForInputBlockEditorView } from '../util';
 import { emoji } from '../emojiList';
+import { createEmojiWrapper, type EmojiData } from '../utils/emoji-dom';
 
-class CustomEmojiWidget extends WidgetType {
-	constructor(readonly imgSrc: string, readonly shortcode: string) {
+class EmojiWidget extends WidgetType {
+	constructor(readonly data: EmojiData) {
 		super();
 	}
 
 	toDOM(): HTMLElement {
-		const wrapper = document.createElement('span');
-		wrapper.className = 'ES-emoji-wrapper';
-		
-		const img = document.createElement('img');
-		img.src = this.imgSrc;
-		img.alt = this.shortcode;
-		img.className = 'ES-inline-emoji';
-		wrapper.appendChild(img);
-		
-		const tooltip = document.createElement('span');
-		tooltip.className = 'ES-emoji-tooltip';
-		
-		const tooltipImg = document.createElement('img');
-		tooltipImg.src = this.imgSrc;
-		tooltipImg.className = 'ES-tooltip-emoji';
-		tooltip.appendChild(tooltipImg);
-		
-		const tooltipText = document.createElement('span');
-		tooltipText.className = 'ES-tooltip-text';
-		tooltipText.textContent = this.shortcode;
-		tooltip.appendChild(tooltipText);
-		
-		wrapper.appendChild(tooltip);
-		return wrapper;
+		return createEmojiWrapper(this.data);
 	}
 
-	eq(other: CustomEmojiWidget): boolean {
-		return this.shortcode === other.shortcode;
-	}
-}
-
-class UnicodeEmojiWidget extends WidgetType {
-	constructor(readonly emojiChar: string, readonly shortcode: string) {
-		super();
-	}
-
-	toDOM(): HTMLElement {
-		const wrapper = document.createElement('span');
-		wrapper.className = 'ES-emoji-wrapper';
-		
-		const emojiSpan = document.createElement('span');
-		emojiSpan.className = 'ES-unicode-emoji';
-		emojiSpan.textContent = this.emojiChar;
-		wrapper.appendChild(emojiSpan);
-		
-		const tooltip = document.createElement('span');
-		tooltip.className = 'ES-emoji-tooltip';
-		
-		const tooltipEmoji = document.createElement('span');
-		tooltipEmoji.className = 'ES-tooltip-unicode';
-		tooltipEmoji.textContent = this.emojiChar;
-		tooltip.appendChild(tooltipEmoji);
-		
-		const tooltipText = document.createElement('span');
-		tooltipText.className = 'ES-tooltip-text';
-		tooltipText.textContent = this.shortcode;
-		tooltip.appendChild(tooltipText);
-		
-		wrapper.appendChild(tooltip);
-		return wrapper;
-	}
-
-	eq(other: UnicodeEmojiWidget): boolean {
-		return this.shortcode === other.shortcode;
+	eq(other: EmojiWidget): boolean {
+		return this.data.shortcode === other.data.shortcode;
 	}
 }
 
@@ -122,13 +64,13 @@ export function createCustomEmojiViewPlugin(plugin: EmojiShortcodesPlugin) {
 						if (customEmoji) {
 							const imgSrc = plugin.getCustomEmojiPath(customEmoji.filename);
 							const widget = Decoration.replace({
-								widget: new CustomEmojiWidget(imgSrc, shortcode),
+								widget: new EmojiWidget({ type: 'custom', imgSrc, shortcode }),
 							});
 							builder.add(start, end, widget);
 						} else if (shortcode in emoji) {
 							const emojiChar = emoji[shortcode] as string;
 							const widget = Decoration.replace({
-								widget: new UnicodeEmojiWidget(emojiChar, shortcode),
+								widget: new EmojiWidget({ type: 'unicode', char: emojiChar, shortcode }),
 							});
 							builder.add(start, end, widget);
 						}

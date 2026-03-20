@@ -16,5 +16,11 @@ export default defineConfig([
         ...globals.node,
       },
     },
+    rules: {
+      "obsidianmd/ui/sentence-case": ["error", {
+        acronyms: ["PNG", "GIF", "JPG", "WEBP"],
+        ignoreRegex: [".*_.*"]
+      }],
+    }
   },
 ]);
