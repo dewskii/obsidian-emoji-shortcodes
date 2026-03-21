@@ -2,7 +2,8 @@
 
 Slack-like emoji support for ObsidianMD.
 
-> [!NOTE]This is a fork of [obsidian-emoji-shortcodes](https://github.com/phibr0/obsidian-emoji-shortcodes) by phibr0.
+> [!NOTE]
+> This is a fork of [obsidian-emoji-shortcodes](https://github.com/phibr0/obsidian-emoji-shortcodes) by phibr0.
 
 ## Features
 
